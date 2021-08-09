@@ -1,0 +1,52 @@
+# Tomcat
+server:
+  # 端 口
+  port: 10011
+
+
+#eureka配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7001/eureka
+  instance:
+    prefer-ip-address: true
+feign:
+  #hystrix 配置
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 10000
+            strategy: SEMAPHORE
+
+# Spring 配置
+spring:
+  redis:
+    host: 118.25.242.174
+    port: 6379
+    #Redis数据库索引（默认为0）
+    database: 0
+    #连接超时时间（毫秒）
+    timeout: 1800000
+    password: 112233456
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+  thymeleaf:
+    cache: false
+  application:
+    name: hotel-index
+  main:
+    allow-bean-definition-overriding: true
+
+
+
+
+
+
+

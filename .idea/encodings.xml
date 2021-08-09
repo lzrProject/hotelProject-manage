@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/hotel-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-eureka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-gateway/hotel-gateway-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service-api/hotel-service-houses-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service-api/hotel-service-index-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service-api/hotel-service-user-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service-api/hotel-service-wx-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service/hotel-service-houses/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service/hotel-service-index/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service/hotel-service-user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-service/hotel-service-wx/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-user-oauth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-web/hotel-manage-entrance/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hotel-web/hotel-wx-hotel/src/main/java" charset="UTF-8" />
+  </component>
+</project>
