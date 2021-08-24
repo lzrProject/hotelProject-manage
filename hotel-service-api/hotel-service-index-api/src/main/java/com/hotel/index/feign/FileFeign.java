@@ -8,10 +8,14 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
-@FeignClient(value = "index")
-@RequestMapping(value = "/file")
+@FeignClient(value = "file")
+@RequestMapping(value = "/newFile")
 public interface FileFeign {
 
     /**
@@ -22,20 +26,27 @@ public interface FileFeign {
     Result<PageInfo> findPage(@RequestBody File file, @RequestParam int page, @RequestParam int limit);
 
     /**
-     * Describe: 文件上传
-     * Param: File
-     * Return: id
+     * 文件上传
      */
-    @PostMapping("/add")
-    Result addAll(@RequestBody File file);
+    @PostMapping(value = "uploadFile",consumes = "multipart/form-data")
+    Result upload(@RequestPart MultipartFile file);
+
 
     /**
-     * Describe: 根据 Id 下载文件
-     * Param: id
-     * Return: IO
+     * 根据file模糊查询
+     * @param file
+     * @return
      */
-    @PostMapping("/findByName")
-    List<File> download(@RequestBody File file);
+    @PostMapping("findByOne")
+    List<File> findFile(@RequestBody File file);
+
+    /**
+     * 文件下载
+     * @param file
+     * @return
+     */
+    @PostMapping("downloadFile")
+    feign.Response download(@RequestBody File file);
 
     /**
      * 根据id主键删除
@@ -44,4 +55,12 @@ public interface FileFeign {
      */
     @DeleteMapping("/del")
     Result delete(@RequestParam Integer id);
+
+    /**
+     * 批量删除文件
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("batchDelete")
+    Result batchRemove(@RequestBody List<Integer> ids);
 }

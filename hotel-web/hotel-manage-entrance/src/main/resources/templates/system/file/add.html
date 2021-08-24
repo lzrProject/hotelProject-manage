@@ -80,7 +80,7 @@
                 });
             }
             , done: function (res, index, upload) {
-                if (res.success) {
+                if (res.flag) {
                     let tr = demoListView.find('tr#upload-' + index)
                         , tds = tr.children();
                     tds.eq(2).html('&nbsp;<button class="layui-btn layui-btn-xs">完成</button>'); //清空操作
@@ -94,11 +94,13 @@
                 tds.eq(2).find('.demo-reload').removeClass('layui-hide');
             }
             , allDone: function () {
+
                 layer.close(layerIndex);
                 layer.msg("上传成功", {icon: 1, time: 1200}, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                     parent.layui.table.reload("file-table");
                 })
+
             },
             before: function () {
                 layerIndex = layer.load();

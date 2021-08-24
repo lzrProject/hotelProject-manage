@@ -5,6 +5,7 @@ import entity.CookieUtil;
 import entity.Result;
 import entity.TokenDecode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -28,21 +29,28 @@ import static servlet.ServletUtil.getResponse;
 @Component
 public class SecureLogoutSuccessHandler implements LogoutSuccessHandler {
 
+    @Value("${serverName}")
+    private String serverName;
+
     @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-        String[] cookies = {"username","Authorization"} ;
-        Map<String, String> cookie = CookieUtil.readCookie(httpServletRequest, cookies);
-        String username = cookie.get("username");
+//        String[] cookies = {"username","Authorization"} ;
+        Map<String, String> cookie = CookieUtil.readCookie(httpServletRequest, "Authorization");
+//        String username = cookie.get("username");
+
+        String username = httpServletRequest.getParameter("username");
+//        httpServletRequest.getRequestURI()
 
         redisTemplate.delete(username +":access_token");
         redisTemplate.delete(username +":refresh_token");
+
         SecurityContextHolder.clearContext();
         if(StringUtil.isNotEmpty(cookie.get("Authorization"))){
             Cookie authorization = new Cookie("Authorization", "");
-            authorization.setDomain("cfoj55pn.dongtaiyuming.net");
+            authorization.setDomain(serverName);
             httpServletResponse.addCookie(authorization);
         }
         Result result = new Result(true, 200, "注销成功");

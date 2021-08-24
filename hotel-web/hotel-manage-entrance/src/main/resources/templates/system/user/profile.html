@@ -75,8 +75,8 @@
                                      success:function(resu){
                                          if(resu.flag){
                                              // 关闭当前弹层
-                                             parent.$("#avatar").attr("src", "/file/download/"+result.data.avatar);
-                                             top.$("#avatar").attr("src", "/file/download/"+result.data.avatar);
+                                             parent.$("#avatar").attr("src", "/file/download1/"+result.data.avatar);
+                                             top.$("#avatar").attr("src", "/file/download1/"+result.data.avatar);
                                              parent.layer.close(parent.layer.getFrameIndex(window.name));
                                          }else{
                                              popup.failure("上传失败")

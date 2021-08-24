@@ -1,22 +1,21 @@
-server:
-  port: 18089
 spring:
+  servlet:
+    multipart:
+      max‐file‐size: 10MB
+      max‐request‐size: 10MB
   application:
-    name: user
+    name: file
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://118.25.242.174:3310/hotelproject_manage?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
     username: root
     password: 123456
 
+server:
+  port: 18083
 eureka:
   client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
+    service‐url:
       defaultZone: http://127.0.0.1:7001/eureka
   instance:
-    prefer-ip-address: true
-feign:
-  hystrix:
-    enabled: true
+    prefer‐ip‐address: true

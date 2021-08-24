@@ -3,7 +3,6 @@ server:
   # 端 口
   port: 10011
 
-
 #eureka配置
 eureka:
   client:
@@ -11,27 +10,35 @@ eureka:
       defaultZone: http://127.0.0.1:7001/eureka
   instance:
     prefer-ip-address: true
+
 feign:
-  #hystrix 配置
   hystrix:
-    command:
-      default:
-        execution:
-          isolation:
-            thread:
-              timeoutInMilliseconds: 10000
-            strategy: SEMAPHORE
+    enabled: true
+#hystrix 配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+          strategy: SEMAPHORE
+
+file:
+  ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
 
 # Spring 配置
 spring:
   redis:
     host: 118.25.242.174
-    port: 6379
+    port: 6370
     #Redis数据库索引（默认为0）
     database: 0
     #连接超时时间（毫秒）
     timeout: 1800000
-    password: 112233456
+    password: yourpasswd
     jedis:
       pool:
         max-active: 8
@@ -45,8 +52,10 @@ spring:
     allow-bean-definition-overriding: true
 
 
-
-
+#项目域名地址
+serverName: nsvpy051.dongtaiyuming.net
+#serverName: zerongweb.free.idcfengye.com
+#serverName: localhost
 
 
 

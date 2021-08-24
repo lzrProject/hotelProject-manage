@@ -3,6 +3,7 @@ package com.hotel.interceptor;
 import entity.CookieUtil;
 import entity.TokenDecode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -53,6 +54,9 @@ public class OauthInterceptor extends OAuth2AuthenticationEntryPoint {
     @Autowired
     private LoadBalancerClient loadBalancerClient;
 
+    //域名地址(含端口号)
+    @Value(value = "${serverName}")
+    private String serverName;
 
 
     @Override
@@ -60,7 +64,6 @@ public class OauthInterceptor extends OAuth2AuthenticationEntryPoint {
         try{
             String message = authException.getLocalizedMessage();
 //            String serverName = request.getServerName();
-            String serverName = "cfoj55pn.dongtaiyuming.net";
             if(message.contains("Access token expired")){
 //                System.out.println(request.getServerPort());
 //                System.out.println(request.getServerName());
@@ -110,7 +113,7 @@ public class OauthInterceptor extends OAuth2AuthenticationEntryPoint {
                     ResponseEntity<Map> map = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Map.class);
                     //登录后的令牌信息
                     Map<String, String> exMap = map.getBody();
-                    redisTemplate.opsForValue().set(username+":access_token",(String) exMap.get("access_token"),60*60*5*1000, TimeUnit.MILLISECONDS);
+                    redisTemplate.opsForValue().set(username+":access_token",(String) exMap.get("access_token"),60*60*2*1000, TimeUnit.MILLISECONDS);
 
 //                    //将token存入头文件中
 //                    ServerHttpRequest.Builder header = serverWebExchange.getRequest().mutate().header("Authorization",exMap.get("access_token"));

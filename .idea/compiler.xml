@@ -12,6 +12,7 @@
         <module name="hotel-user-oauth" />
         <module name="hotel-service-index-api" />
         <module name="hotel-service-wx-api" />
+        <module name="hotel-service-file" />
         <module name="hotel-common-db" />
         <module name="hotel-gateway-web" />
         <module name="hotel-manage-entrance" />
@@ -40,6 +41,7 @@
       <module name="hotel-manage-entrance" options="-parameters" />
       <module name="hotel-service" options="-parameters" />
       <module name="hotel-service-api" options="-parameters" />
+      <module name="hotel-service-file" options="-parameters" />
       <module name="hotel-service-houses" options="-parameters" />
       <module name="hotel-service-houses-api" options="-parameters" />
       <module name="hotel-service-index" options="-parameters" />

@@ -24,6 +24,12 @@ public class File {
     /**
      * 文件名称
      * */
+    @Column(name = "group_name")
+    private String groupName;
+
+    /**
+     * 文件名称
+     * */
     @Column(name = "file_name")
     private String fileName;
 
@@ -126,5 +132,13 @@ public class File {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

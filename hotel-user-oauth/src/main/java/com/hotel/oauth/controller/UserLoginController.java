@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +41,12 @@ public class UserLoginController {
     //Cookie生命周期
     @Value("${auth.cookieMaxAge}")
     private int cookieMaxAge;
+
+    @Value("${token.accessTokenTime}")
+    private int accessTokenTime;
+
+    @Value("${token.refreshTokenTime}")
+    private int refreshTokenTime;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -81,8 +89,8 @@ public class UserLoginController {
                 AuthToken authToken = userLoginService.login(username, password, clientId, clientSecret, grant_type);
                 if (authToken != null) {
                     saveCookie(authToken.getAccessToken());
-                    redisTemplate.opsForValue().set(username+":access_token",authToken.getAccessToken(),60*60*2*1000,TimeUnit.MILLISECONDS);
-                    redisTemplate.opsForValue().set(username+":refresh_token",authToken.getRefreshToken(),24*60*60*5*1000,TimeUnit.MILLISECONDS);
+                    redisTemplate.opsForValue().set(username+":access_token",authToken.getAccessToken(),accessTokenTime,TimeUnit.MILLISECONDS);
+                    redisTemplate.opsForValue().set(username+":refresh_token",authToken.getRefreshToken(),refreshTokenTime,TimeUnit.MILLISECONDS);
                     return new Result(true, StatusCode.OK, "登录成功", authToken);
                 }
             }
@@ -95,9 +103,10 @@ public class UserLoginController {
      * 将令牌存储到cookie
      * @param token
      */
-    private void saveCookie(String token){
+    private void saveCookie(String token) {
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 //        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        String cookieDomain = serverWebExchange.getRequest().getURI();
         CookieUtil.addCookie(response,cookieDomain,"/","Authorization",token,cookieMaxAge,false);
     }
 
@@ -117,4 +126,5 @@ public class UserLoginController {
 //
 //        }
 //    }
+
 }

@@ -5,12 +5,12 @@ spring:
     name: user-auth
   redis:
     host: 118.25.242.174
-    port: 6379
+    port: 6370
     #Redis数据库索引（默认为0）
     database: 0
     #连接超时时间（毫秒）
     timeout: 1800000
-    password: 112233456
+    password: yourpasswd
     jedis:
       pool:
         max-active: 8
@@ -18,7 +18,7 @@ spring:
         min-idle: 0
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hotel_oauth?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+    url: jdbc:mysql://118.25.242.174:3310/hotel_oauth?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
     username: root
     password: 123456
 
@@ -30,12 +30,21 @@ eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:7001/eureka
+
+
+
+index:
+  ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+
 auth:
 #  ttl: 600  #token存储到redis的过期时间
   clientId: hoteloau
   clientSecret: hoteloau
 #  cookieDomain: localhost
-  cookieDomain: cfoj55pn.dongtaiyuming.net
+  cookieDomain: nsvpy051.dongtaiyuming.net
+#  cookieDomain: zerongweb.free.idcfengye.com
   cookieMaxAge: 7200
 
 #证书和密钥配置
@@ -47,3 +56,11 @@ encrypt:
     secret: hoteloau
     alias: hoteloau
     password: hoteloau
+#token在redis存储时长（毫秒）
+token:
+  #60*60*2*1000
+  accessTokenTime: 7200000
+  #24*60*60*5*1000
+  refreshTokenTime: 432000000
+
+

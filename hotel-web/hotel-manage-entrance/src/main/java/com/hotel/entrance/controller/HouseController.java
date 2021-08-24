@@ -84,15 +84,19 @@ public class HouseController {
             return new Result(false, StatusCode.ERROR,"请选择上级菜单");
         }
 
+
         File file = new File();
         file.setFileName(hotel.getImageUrl());
-        List<File> download = fileFeign.download(file);
+        List<File> download = fileFeign.findFile(file);
 
         if(download.get(0).getId() == null){
             return new Result(false,StatusCode.ERROR,"无此图片");
         }
+        String newUrl = "http://118.25.242.174:8080/group1/"+hotel.getImageUrl()+"."+download.get(0).getFileType();
+
         hotel.setScore("4.5");
         hotel.setDistance(2.0);
+        hotel.setImageUrl(newUrl);
         Integer hotelId = hotelFeign.addAll(hotel);
 
         HotelFile hotelFile = new HotelFile();
@@ -119,12 +123,14 @@ public class HouseController {
 
         File file = new File();
         file.setFileName(hotel.getImageUrl());
-        List<File> download = fileFeign.download(file);
+        List<File> download = fileFeign.findFile(file);
 
         if(download.size() == 0){
             return new Result(false,StatusCode.ERROR,"无此图片");
         }
+        String newUrl = "http://118.25.242.174:8080/group1/"+hotel.getImageUrl()+"."+download.get(0).getFileType();
 
+        hotel.setImageUrl(newUrl);
         Result result = hotelFeign.update(hotel);
         return result;
     }

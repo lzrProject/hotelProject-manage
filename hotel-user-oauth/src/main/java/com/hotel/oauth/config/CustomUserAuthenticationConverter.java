@@ -34,7 +34,7 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
         Object principal = authentication.getPrincipal();
         UserJwt userJwt = null;
 
-        List<User> byUsername = userFeign.findByUsername(name);
+//        List<User> byUsername = userFeign.findByUsername(name);
         if(principal instanceof  UserJwt){
             userJwt = (UserJwt) principal;
         }else{
@@ -44,9 +44,13 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
         }
 
         //存储载荷信息
-        response.put("name", byUsername.get(0).getUsername());
-        response.put("id", byUsername.get(0).getId().toString());
-        response.put("avatar", byUsername.get(0).getAvatar());
+//        response.put("name", byUsername.get(0).getUsername());
+//        response.put("id", byUsername.get(0).getId().toString());
+//        response.put("avatar", byUsername.get(0).getAvatar());
+
+        response.put("name",userJwt.getUsername());
+        response.put("id", userJwt.getId());
+        response.put("avatar", userJwt.getAvatar());
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             response.put("authorities", AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
         }

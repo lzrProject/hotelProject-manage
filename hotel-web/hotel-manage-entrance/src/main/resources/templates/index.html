@@ -81,7 +81,7 @@
 
         admin.render();
 
-        $('.layui-nav-img').attr("src","/file/download/"+[[${avatar}]]);
+        $('.layui-nav-img').attr("src","/file/download1/"+[[${avatar}]]);
 
         // 注销实现
         admin.logout(function(){
@@ -89,6 +89,9 @@
             $.ajax({
                 url: '/logout',
                 dataType: 'json',
+                data: {
+                    "username": [[${username}]]
+                },
                 type: 'post',
                 success: function(result) {
                     layer.close(loading);

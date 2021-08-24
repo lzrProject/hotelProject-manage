@@ -3,14 +3,17 @@ package com.hotel.entrance.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+
 import com.hotel.index.feign.FileFeign;
 import com.hotel.index.pojo.File;
 import com.hotel.index.pojo.Role;
 import entity.Result;
 import entity.StatusCode;
+import feign.Response;
 import file.FileUtil;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -19,13 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import servlet.ServletUtil;
 
-import java.io.FileInputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Describe: 文件控制器
@@ -87,13 +89,13 @@ public class FileController {
      * Describe: 文件获取接口
      * Param: fileName
      * Return: 文件流
-     * */
+     *
     @GetMapping("download/{fileName}")
-    public void download(@PathVariable("fileName") String fileName){
+    public void download(@PathVariable("fileName") String fileName) {
         File file = new File();
         file.setFileName(fileName);
-        creatDownload(file);
-    }
+        fileFeign.download(file);
+    }*/
 
     /**
      * Describe: 文件获取接口
@@ -101,10 +103,48 @@ public class FileController {
      * Return: 文件流
      * */
     @GetMapping("download1/{id}")
-    public void download(@PathVariable("id") Integer id){
+    public void download(@PathVariable("id") Integer id) {
         File file = new File();
         file.setId(id);
-        creatDownload(file);
+
+        InputStream fileInputStream = null;
+//        OutputStream outStream;
+
+        try {
+            Response download = fileFeign.download(file);
+            Response.Body body = download.body();
+
+            fileInputStream = body.asInputStream();
+
+            FileCopyUtils.copy(fileInputStream, ServletUtil.getResponse().getOutputStream());
+
+
+
+/*          outStream = servletResponse.getOutputStream();
+            byte[] bytes = new byte[1024];
+            int len = 0;
+            while ((len = fileInputStream.read(bytes)) != -1) {
+                outStream.write(bytes, 0, len);
+            }
+            fileInputStream.close();
+            outStream.close();
+            outStream.flush();
+            if(inputStream.read() != -1){
+//                InputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+            }*/
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                if(fileInputStream != null) fileInputStream.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+
     }
     
 
@@ -114,8 +154,46 @@ public class FileController {
      * Param: SysUser
      * Return: Result
      * */
-    @PostMapping("upload")
+    @PostMapping(value = "upload")
     public Result upload(@RequestParam("file") MultipartFile file){
+        Result result = fileFeign.upload(file);
+        if(!result.isFlag()){
+            return new Result(false, StatusCode.ERROR,"上传失败");
+        }
+
+        return new Result(true , StatusCode.OK,"上传成功",result.getData());
+    }
+
+
+    /**
+     * Describe: 文件删除接口
+     * Param: id
+     * Return: 文件流
+     * */
+    @DeleteMapping("remove/{id}")
+    @PreAuthorize("hasAuthority('sys:file:remove')")
+    public Result remove(@PathVariable("id") Integer id){
+        Result result = fileFeign.delete(id);
+        return result;
+    }
+
+    /**
+     * Describe: 文件删除接口
+     * Param: id
+     * Return: 文件流
+     * */
+    @DeleteMapping("batchRemove/{ids}")
+    @PreAuthorize("hasAuthority('sys:file:remove')")
+    public Result batchRemove(@PathVariable("ids") String ids){
+        List<String> strings = Arrays.asList(ids.split(","));
+        List<Integer> integers = strings.stream().map(Integer::parseInt).collect(Collectors.toList());
+        Result result = fileFeign.batchRemove(integers);
+
+        return result;
+    }
+
+
+    /*public Result upload(@RequestParam("file") MultipartFile file){
 
         try {
             String name = file.getOriginalFilename();
@@ -128,6 +206,7 @@ public class FileController {
             if (!filepath.getParentFile().exists()) {
                 filepath.getParentFile().mkdirs();
             }
+
             File fileDomain = new File();
             //上传
             file.transferTo(filepath);
@@ -154,33 +233,9 @@ public class FileController {
             return null;
         }
 
-    }
+    }*/
 
-    /**
-     * Describe: 文件删除接口
-     * Param: id
-     * Return: 文件流
-     * */
-    @DeleteMapping("remove/{id}")
-    @PreAuthorize("hasAuthority('sys:file:remove')")
-    public Result remove(@PathVariable("id") Integer id){
-        Result result = fileFeign.delete(id);
-        return result;
-    }
-
-    /**
-     * Describe: 文件删除接口
-     * Param: id
-     * Return: 文件流
-     * */
-    @DeleteMapping("batchRemove/{ids}")
-    @PreAuthorize("hasAuthority('sys:file:remove')")
-    public Result batchRemove(@PathVariable("ids") String ids){
-        return null;
-    }
-
-
-    //封装下载方法
+    /*//封装下载方法
     public void creatDownload(File file){
 
         try {
@@ -201,5 +256,5 @@ public class FileController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

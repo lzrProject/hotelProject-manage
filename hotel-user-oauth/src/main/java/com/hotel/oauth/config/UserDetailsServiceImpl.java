@@ -85,12 +85,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
         //查询权限信息
-        ArrayList powerIds = powerFeign.findPowerId(result.get(0).getId());
+        ArrayList powerIds = null;
+        try {
+            powerIds = powerFeign.findPowerId(result.get(0).getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String join = Joiner.on(",").join(powerIds);
 
         //创建User对象 权限
         String permissions = join;     //指定用户权限角色信息
         UserJwt userDetails = new UserJwt(username,password,AuthorityUtils.commaSeparatedStringToAuthorityList(permissions));
+        userDetails.setId(result.get(0).getId().toString());
+        userDetails.setAvatar(result.get(0).getAvatar());
         return userDetails;
     }
 }

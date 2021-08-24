@@ -20,6 +20,7 @@
         <module>hotel-service-user</module>
         <module>hotel-service-index</module>
         <module>hotel-service-wx</module>
+        <module>hotel-service-file</module>
     </modules>
 
     <!--依赖-->

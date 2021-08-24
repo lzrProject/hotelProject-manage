@@ -29,9 +29,6 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
     //用户登录
     private static final String USER_LOGIN_URL = "/oauth/login";
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
     //全局拦截
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
